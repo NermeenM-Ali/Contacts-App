@@ -33,7 +33,7 @@ export const FetchUserContactsSuccess = (contactsData: IContact[]) => {
             ...contactsData.slice(idx + 1),
           ];
         } else {
-          return item;
+          return {...item, isFavourite: false, isSelected: false};
         }
       });
     });
