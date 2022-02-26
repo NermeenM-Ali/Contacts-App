@@ -88,6 +88,7 @@ const LoginWithPhoneNumberScreen = () => {
               error={formikProps.errors.phoneNumber}
               touched={formikProps.touched.phoneNumber}
               onSubmitEditing={() => {
+                formikProps.handleSubmit();
                 Keyboard.dismiss();
               }}
             />

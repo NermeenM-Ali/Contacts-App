@@ -11,13 +11,14 @@ import {moderateScale, scale, verticalScale} from '../../../utils/Scaling';
 import colors from '../../../assets/colors';
 import Fonts from '../../../assets/Fonts';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {toggleFavouriteContact} from '../../../redux/actions/FavouriteContactsAction';
 import {Contact} from 'react-native-contacts';
 import {
   addToSelectedContacts,
   removeSelectedContacts,
 } from '../../../redux/actions/SelectedContactsAction';
+import {RootState} from '../../../redux/Configration';
 
 export interface IContact extends Contact {
   isFavourite: boolean;
@@ -25,11 +26,15 @@ export interface IContact extends Contact {
 }
 interface IContactsItem {
   item: IContact;
-  isFavouriteContacts: boolean;
 }
+
+const checkIfFavouriteContactsTabSelector = (state: RootState) =>
+  state.ContactsReducer.isFavouriteContacts;
+
 const ContactsItem = (props: IContactsItem) => {
   const dispatch = useDispatch();
-  const {item, isFavouriteContacts} = props;
+  const isFavouriteContacts = useSelector(checkIfFavouriteContactsTabSelector);
+  const {item} = props;
   const {
     displayName,
     thumbnailPath,
@@ -45,7 +50,7 @@ const ContactsItem = (props: IContactsItem) => {
   return (
     <TouchableOpacity
       onLongPress={() =>
-        !isFavouriteContacts
+        !isFavouriteContacts && !isSelected
           ? dispatch(addToSelectedContacts({...item, isSelected: true}))
           : null
       }
@@ -56,7 +61,9 @@ const ContactsItem = (props: IContactsItem) => {
       }
       activeOpacity={0.5}
       style={styles.container}>
-      {!isSelected ? (
+      {(!isSelected && isFavourite && isFavouriteContacts) ||
+      (isSelected && isFavourite && isFavouriteContacts) ||
+      !isSelected ? (
         <>
           {thumbnailPath ? (
             <View style={styles.imgContainer}>
@@ -68,18 +75,11 @@ const ContactsItem = (props: IContactsItem) => {
             </View>
           )}
         </>
-      ) : isSelected ? (
-        <>
-          {thumbnailPath ? (
-            <View style={styles.imgContainer}>
-              <Image style={styles.img} source={{uri: thumbnailPath}} />
-            </View>
-          ) : (
-            <View style={styles.checkContainer}>
-              <Ionicons name="checkmark" style={styles.checkIcon} />
-            </View>
-          )}
-        </>
+      ) : (isSelected && !isFavourite && !isFavouriteContacts) ||
+        (isSelected && isFavourite && !isFavouriteContacts) ? (
+        <View style={styles.checkContainer}>
+          <Ionicons name="checkmark" style={styles.checkIcon} />
+        </View>
       ) : null}
       <View style={styles.contactInfoContainer}>
         <Text style={styles.contactName} numberOfLines={1}>

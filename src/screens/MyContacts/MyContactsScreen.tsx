@@ -1,16 +1,18 @@
 import {FlatList, StyleSheet, View} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useFetchUserContacts} from '../../customHooks/useFetchUserContacts';
 import colors from '../../assets/colors';
 import ContactsItem from './MyContactsComponents/ContactsItem';
 import Spinner from '../../components/Spinner';
 import Seperator from '../../components/Seperator';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../redux/Configration';
 import Header from '../../components/Header';
 import EmptyPage from '../../components/EmptyPage';
 import SelectedContactsItem from './MyContactsComponents/SelectedContactsItem';
 import {scale, verticalScale} from '../../utils/Scaling';
+import {changeContactsProps} from '../../redux/actions/ContactsAction';
+import {useIsFocused} from '@react-navigation/native';
 
 const userContactsSelectorFunction = (state: RootState) =>
   state.ContactsReducer.userContacts;
@@ -20,14 +22,16 @@ const selectedContactsSelectorFunction = (state: RootState) => {
   return state.SelectedContactsReducer.selectedContacts;
 };
 
-const userInfoSelectorFunction = (state: RootState) =>
-  state.AuthReducer.userInfo;
-
 const MyContactsScreen = () => {
+  const dispatch = useDispatch();
+  const isFocused = useIsFocused();
   const {isLoading, isError} = useFetchUserContacts();
   const userContacts = useSelector(userContactsSelectorFunction);
   const selectedContacts = useSelector(selectedContactsSelectorFunction);
-  const userInfo = useSelector(userInfoSelectorFunction);
+
+  useEffect(() => {
+    isFocused && dispatch(changeContactsProps('isFavouriteContacts', false));
+  }, []);
 
   const renderContactsList = () => {
     return (
@@ -36,9 +40,7 @@ const MyContactsScreen = () => {
         keyExtractor={(_, idx) => idx.toString()}
         showsVerticalScrollIndicator={false}
         style={styles.userContactsContainer}
-        renderItem={({item}) => (
-          <ContactsItem item={item} isFavouriteContacts={false} />
-        )}
+        renderItem={({item}) => <ContactsItem item={item} />}
         ItemSeparatorComponent={() => <Seperator />}
       />
     );

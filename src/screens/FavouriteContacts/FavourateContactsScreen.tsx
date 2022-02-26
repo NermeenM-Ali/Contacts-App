@@ -1,27 +1,34 @@
 import {FlatList, StyleSheet, View} from 'react-native';
-import React from 'react';
-import {useSelector} from 'react-redux';
+import React, {useEffect} from 'react';
+import {useIsFocused} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
 import Seperator from '../../components/Seperator';
 import ContactsItem from '../MyContacts/MyContactsComponents/ContactsItem';
 import colors from '../../assets/colors';
 import EmptyPage from '../../components/EmptyPage';
 import {RootState} from '../../redux/Configration';
 import Header from '../../components/Header';
+import {changeContactsProps} from '../../redux/actions/ContactsAction';
 
 const favContactsSelectorFunction = (state: RootState) =>
   state.ContactsReducer.favouriteContacts;
 
 const FavourateContactsScreen = () => {
+  const dispatch = useDispatch();
+  const isFocused = useIsFocused();
   const favouriteContacts = useSelector(favContactsSelectorFunction);
+
+  useEffect(() => {
+    isFocused && dispatch(changeContactsProps('isFavouriteContacts', true));
+  }, []);
+
   const renderFavouriteContactsList = () => {
     return (
       <FlatList
         data={favouriteContacts}
         keyExtractor={(_, idx) => idx.toString()}
         showsVerticalScrollIndicator={false}
-        renderItem={({item}) => (
-          <ContactsItem item={item} isFavouriteContacts={true} />
-        )}
+        renderItem={({item}) => <ContactsItem item={item} />}
         ItemSeparatorComponent={() => <Seperator />}
       />
     );

@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "656759145467-jn0kv8mgi67eldehdfvo1jjmd0va9qbv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.contactsapp",
+            "certificate_hash": "3673dc3d96622932e318e11e94021f2414fa51e0"
+          }
+        },
+        {
           "client_id": "656759145467-u58kn8dh6eckjjt9j25reeg8lt0d0iep.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

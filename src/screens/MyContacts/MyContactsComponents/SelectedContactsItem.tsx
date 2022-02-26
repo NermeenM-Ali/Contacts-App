@@ -90,9 +90,9 @@ const styles = StyleSheet.create({
     color: colors.WHITE_COLOR,
   },
   removeBtnContainer: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
+    width: 25,
+    height: 25,
+    borderRadius: 12.5,
     backgroundColor: colors.LIGHT_GRAY_COLOR,
     justifyContent: 'center',
     alignItems: 'center',

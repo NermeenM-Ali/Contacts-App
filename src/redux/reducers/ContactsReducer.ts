@@ -7,6 +7,7 @@ const initialState = {
   favouriteContactsBackUp: [],
   searchResultText: null,
   searchFavouriteResultText: null,
+  isFavouriteContacts: false,
 };
 
 const ContactsReducer = (state = initialState, action: any) => {
